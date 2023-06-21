@@ -43,7 +43,6 @@ void creat_threads(t_arguments num, t_variables *var)
 			ft_error();
 		usleep(50);
 		j++;
-
 	}
 }
 
@@ -54,7 +53,7 @@ void creat_philos(t_variables *var, t_arguments *num)
 	while (var->fin == 0)
 	{
 		k = 0;
-		while (k<num->philo_number)
+		while (k < num->philo_number)
 		{
 			if(philo_check(&var[k], num, k) == -1)
 				return;

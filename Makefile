@@ -5,7 +5,7 @@ SRC = main.c eat.c ft_timestamps.c philo_check.c routine.c take_right_fork.c arg
 
 OBJ = ${SRC:.c=.o}
 
-CFLAGS = -Wall -Wextra -Werror -pthread -g3
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread -g3
 
 RM = rm -rf
 

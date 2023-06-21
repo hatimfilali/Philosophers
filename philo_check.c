@@ -3,12 +3,15 @@
 
 void	philo_check_helper (t_variables *var, int *finished, t_arguments *args)
 {
-	if (check_all_ate(args->all_ate, args->philo_number))
+	if (args->max_meals != -1)
 	{
-		pthread_mutex_lock(var->general);
-		*(var->flag) = 1;
-		pthread_mutex_unlock(var->general);
-		*finished = 1;
+		if (check_all_ate(args->all_ate, args->philo_number))
+		{
+			pthread_mutex_lock(var->general);
+			*(var->flag) = 1;
+			pthread_mutex_unlock(var->general);
+			*finished = 1;
+		}
 	}
 }
 
