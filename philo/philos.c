@@ -1,18 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philos.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hfilali <hfilali@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/22 22:42:18 by hfilali           #+#    #+#             */
+/*   Updated: 2023/06/24 02:08:35 by hfilali          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-void init_philos(t_arguments *num, t_variables *var)
+void	init_helper(t_arguments *num)
 {
-	int i = 0;
 	num->eating = malloc (sizeof(pthread_mutex_t));
 	num->writing = malloc (sizeof(pthread_mutex_t));
 	num->general = malloc (sizeof(pthread_mutex_t));
-	num->fork = malloc (sizeof(pthread_mutex_t));
+	num->fork = malloc (sizeof(pthread_mutex_t) * num->philo_number);
 	num->flg = malloc(sizeof(int));
 	*(num->flg) = 0;
 	num->time = ft_timestamps(0);
 	pthread_mutex_init(num->eating, NULL);
 	pthread_mutex_init(num->writing, NULL);
 	pthread_mutex_init(num->general, NULL);
+}
+
+void	init_philos(t_arguments *num, t_variables *var)
+{
+	int	i;
+
+	i = 0;
+	init_helper(num);
 	while (i < num->philo_number)
 	{
 		var[i].id = i + 1;
@@ -32,13 +51,15 @@ void init_philos(t_arguments *num, t_variables *var)
 	}
 }
 
-void creat_threads(t_arguments num, t_variables *var)
+void	creat_threads(t_arguments num, t_variables *var)
 {
-	int j = 0;
-	int result;
+	int	j;
+	int	result;
+
+	j = 0;
 	while (j < num.philo_number)
 	{
-		result  = pthread_create(&var[j].philo_threads, NULL, routine, &var[j]);
+		result = pthread_create(&var[j].philo_threads, NULL, routine, &var[j]);
 		if (result)
 			ft_error();
 		usleep(50);
@@ -46,17 +67,19 @@ void creat_threads(t_arguments num, t_variables *var)
 	}
 }
 
-void creat_philos(t_variables *var, t_arguments *num)
+void	creat_philos(t_variables *var, t_arguments *num)
 {
-	int k = 0;
+	int	k;
+
+	k = 0;
 	var->fin = 0;
 	while (var->fin == 0)
 	{
 		k = 0;
 		while (k < num->philo_number)
 		{
-			if(philo_check(&var[k], num, k) == -1)
-				return;
+			if (philo_check(&var[k], num, k) == -1)
+				return ;
 			k++;
 		}
 		philo_check_helper(var, &var->fin, num);
@@ -66,19 +89,20 @@ void creat_philos(t_variables *var, t_arguments *num)
 void	philos(t_arguments *num)
 {
 	t_variables	*var;
+	int			i;
 
 	var = malloc(sizeof(t_variables) * num->philo_number);
 	if (!var)
 	{
 		ft_error();
-		return;
+		return ;
 	}
 	init_philos(num, var);
 	creat_threads(*num, var);
 	creat_philos(var, num);
 	if (num->philo_number != 1)
 	{
-		int i = 0;
+		i = 0;
 		while (i < num->philo_number)
 		{
 			pthread_join(var[i].philo_threads, NULL);
